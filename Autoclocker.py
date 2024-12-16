@@ -61,9 +61,6 @@ if __name__ == "__main__":
 	
 	# setting the windows size
 	root.geometry("590x210")
-	
-	# declaring string variable
-	# for storing name and password
 
 	name_var=tk.StringVar()
 	passw_var=tk.StringVar()
@@ -251,9 +248,6 @@ if __name__ == "__main__":
 			['mode', v.get()]]
 	
 	with open('user_settings.csv', 'w') as csvfile:
-		# creating a csv writer object
 		csvwriter = csv.writer(csvfile)
-		# writing the fields
 		csvwriter.writerow(fields)
-		# writing the data rows
 		csvwriter.writerows(rows)
