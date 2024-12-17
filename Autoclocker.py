@@ -156,9 +156,6 @@ if __name__ == "__main__":
 	listener = Listener(on_press=on_press)
 	listener.start()
 
-	# creating a label for 
-	# name using widget Label
-
 	b1= tk.Radiobutton(root, text='', variable=v, value=1)
 	b2 = tk.Radiobutton(root, text='', variable=v, value=2)
 
@@ -206,7 +203,6 @@ if __name__ == "__main__":
 	name_label.grid(row=1,column=0, padx=(10,5))
 	name_entry.grid(row=1,column=1)
 	mouse_label.grid(row=2, column=0, padx=(10,5))
-	#mouse_entry.grid(row=1, column=1)
 	passw_label.grid(row=1,column=3, padx=(0,5))
 	passw_entry.grid(row=1,column=4)
 	passw1_label.grid(row=1,column=5)
@@ -230,15 +226,15 @@ if __name__ == "__main__":
 
 	root.iconbitmap("clocker.ico")
 	
-	# performing an infinite loop 
-	# for the window to display
-	root.mainloop()
+	root.mainloop() # Window infinite loop
+
 	loopOn = False # Close all threads
+
 	listener.stop()
 
 	fields = ['type', 'val']
 
-	print(variable.get())
+	# print(variable.get())
 
 	rows = [['delay', passw_var.get()],
 			['duration', dur_var.get()],
