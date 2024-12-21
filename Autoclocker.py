@@ -60,7 +60,7 @@ if __name__ == "__main__":
 	root=tk.Tk()
 	
 	# setting the windows size
-	root.geometry("590x210")
+	root.geometry("300x296")
 
 	name_var=tk.StringVar()
 	passw_var=tk.StringVar()
@@ -89,6 +89,11 @@ if __name__ == "__main__":
 	v.set(1)
 
 	v.set(rows[11][1])
+
+	aType = tk.IntVar(root)
+	aType.set(1)
+
+	aType.set(rows[13][1])
 	
 	
 	def StartLoop():
@@ -147,6 +152,26 @@ if __name__ == "__main__":
 				isSettingKeyNow = False
 			else:
 				if key.char == sensitiveKey:
+					if aType.get() == 1:
+						StartLoop()
+					else:
+						global loopOn
+						if not loopOn:
+							StartLoop()
+
+
+			
+			return True
+		except AttributeError as ex:
+			pass
+	
+	def on_release(key):
+		global sensitiveKey
+		global isSettingKeyNow
+
+		try:
+			if not isSettingKeyNow:
+				if key.char == sensitiveKey and aType.get() == 2:
 					StartLoop()
 			
 			return True
@@ -156,71 +181,91 @@ if __name__ == "__main__":
 	listener = Listener(on_press=on_press)
 	listener.start()
 
-	b1= tk.Radiobutton(root, text='', variable=v, value=1)
-	b2 = tk.Radiobutton(root, text='', variable=v, value=2)
+	listener_release = Listener(on_release=on_release)
+	listener_release.start()
 
 	root.title("Autoclocker")
 
-	main_label = tk.Label(root, text = 'Input Type:', font=('calibre',13, 'bold'))
-	main_label1 = tk.Label(root, text = 'Timing:', font=('calibre',13, 'bold'))
-	main_label2 = tk.Label(root, text = 'Run:', font=('calibre',13, 'bold'))
+	smallFont = ('calibre',10,'normal')
+	defaultFont = ('calibre',12, 'normal')
+	boldFont = ('calibre',13, 'bold')
 
-	name_label = tk.Label(root, text = 'Keys', font=('calibre',12, 'normal'))
-	name_entry = tk.Entry(root,textvariable = name_var, font=('calibre',10,'normal'))
+	# Input type frame
+	input_frame = tk.LabelFrame(root, text="Input", font=boldFont, padx=10, pady=10)
 
-	mouse_label = tk.Label(root, text = 'Mouse', font=('calibre',12, 'normal'))
-	
-	spacer = tk.Frame(root, height=20)
+	name_label = tk.Label(input_frame, text = 'Keys', font=defaultFont)
+	name_entry = tk.Entry(input_frame,textvariable = name_var, font=smallFont, width=18)
 
-	spacer1 = tk.Frame(root, height=20)
+	mouse_label = tk.Label(input_frame, text = 'Mouse', font=defaultFont)
 
-	spacer2 = tk.Frame(root, height=10)
-
-	passw_label = tk.Label(root, text = 'Delay', font = ('calibre',12,'normal'))
-	passw1_label = tk.Label(root, text = 'ms', font = ('calibre',10,'normal'))
-	passw_entry=tk.Entry(root, textvariable = passw_var, font = ('calibre',10,'normal'))
-
-	d_label = tk.Label(root, text = 'Duration', font = ('calibre',12,'normal'))
-	d1_label = tk.Label(root, text = 'ms', font = ('calibre',10,'normal'))
-	d_entry=tk.Entry(root, textvariable = dur_var, font = ('calibre',10,'normal'))
-
-	s_label = tk.Label(root, text = 'Trigger Key', font = ('calibre',12,'normal'))
-	s_btn=tk.Button(root,text = 'Set Key', command = ReadKey, width=8)
-	srem_btn=tk.Button(root,text = 'Delete Key', command = RemoveKey, width=8)
-	s_entry=tk.Entry(root, textvariable = keyField, font = ('calibre',10,'normal'))
-	s_entry.configure(state='readonly')
-	
-	sub_btn=tk.Button(root,text = 'Start', command = StartLoop, width=20)
+	b1= tk.Radiobutton(input_frame, text='', variable=v, value=1)
+	b2 = tk.Radiobutton(input_frame, text='', variable=v, value=2)
 
 	options= ["Left", "Right", "Middle"]
-	w = tk.OptionMenu(root, variable, *options)
-	w.config(width=17)
+	w = tk.OptionMenu(input_frame, variable, *options)
+	w.config(width=15)
 	
+	# Delay settings frame
+	delay_frame = tk.LabelFrame(root, text="Delay", font=boldFont, padx=1, pady=10)
+
+	passw_label = tk.Label(delay_frame, text = 'Delay', font = defaultFont)
+	passw1_label = tk.Label(delay_frame, text = 'ms', font = smallFont)
+	passw_entry=tk.Entry(delay_frame, textvariable = passw_var, font = smallFont, width=18)
+
+	d_label = tk.Label(delay_frame, text = 'Duration', font = defaultFont)
+	d1_label = tk.Label(delay_frame, text = 'ms', font = smallFont)
+	d_entry=tk.Entry(delay_frame, textvariable = dur_var, font = smallFont, width=18)
+
+	# Activation settings frame
+	activation_frame = tk.LabelFrame(root, text="Activation", font=boldFont, padx=5, pady=10)
+
+	s_label = tk.Label(activation_frame, text = 'Trigger', font = defaultFont)
+	s_btn=tk.Button(activation_frame,text = 'Set', command = ReadKey, width=5)
+	srem_btn=tk.Button(activation_frame,text = 'Delete', command = RemoveKey, width=6)
+	s_entry=tk.Entry(activation_frame, textvariable = keyField, font = smallFont, width=8)
+	s_entry.configure(state='readonly')
 	
-	b1.grid(row=1,column=2)
-	b2.grid(row=2,column=2)
+	sub_btn=tk.Button(activation_frame,text = 'Start', command = StartLoop, width=8)
+
+	radioHold = tk.Radiobutton(activation_frame, text='Hold', variable=aType, value=2, font=smallFont)
+	radioPress = tk.Radiobutton(activation_frame, text='Press', variable=aType, value=1, font=smallFont)
+	
+
+	# Packing input frame
+	input_frame.pack(padx=5, pady=0, fill="x")
+
+	b1.grid(row=1,column=2,padx=(10,5))
+	b2.grid(row=2,column=2,padx=(10,5))
 
 	name_label.grid(row=1,column=0, padx=(10,5))
-	name_entry.grid(row=1,column=1)
+	name_entry.grid(row=1,column=1, padx=(10,5))
 	mouse_label.grid(row=2, column=0, padx=(10,5))
-	passw_label.grid(row=1,column=3, padx=(0,5))
-	passw_entry.grid(row=1,column=4)
-	passw1_label.grid(row=1,column=5)
 
-	d_label.grid(row=2,column=3, padx=(0,5))
-	d_entry.grid(row=2,column=4)
-	d1_label.grid(row=2,column=5)
+	w.grid(row=2, column=1, padx=(10,5))
 
-	s_label.grid(row=7,column=0, padx=(10,5))
-	s_entry.grid(row=7,column=1)
-	s_btn.grid(row=7,column=2)
-	srem_btn.grid(row=7,column=3, padx=5)
+	# Packing delay frame
+	delay_frame.pack(padx=5, pady=0, fill="x")
 
-	sub_btn.grid(row=8,column=1, pady=10)
-	w.grid(row=2, column=1)
-	main_label.grid(row=0, column=1, pady=(10,5))
-	main_label1.grid(row=0, column=4, pady=(10,5))
-	main_label2.grid(row=6, column=1, pady=(10,5))
+	passw_label.grid(row=1,column=0, padx=(10,5))
+	passw_entry.grid(row=1,column=1, padx=(10,5))
+	passw1_label.grid(row=1,column=2, padx=(10,5))
+
+	d_label.grid(row=2,column=0, padx=(10,5))
+	d_entry.grid(row=2,column=1, padx=(10,5))
+	d1_label.grid(row=2,column=2, padx=(10,5))
+
+	# Packing activation frame
+	activation_frame.pack(padx=5, pady=0, fill="x")
+
+	s_label.grid(row=0,column=0, padx=(10,5))
+	s_entry.grid(row=0,column=1, padx=(15,5))
+	s_btn.grid(row=0,column=2, padx=(8,5))
+	srem_btn.grid(row=0,column=3, padx=(8,5))
+
+	sub_btn.grid(row=1,column=0, pady=(5,0), padx=(3,0))
+
+	radioHold.grid(row=1, column=2, pady=(5,0))
+	radioPress.grid(row=1, column=1, pady=(5,0))
 
 	root.resizable(False, False)
 
@@ -241,7 +286,8 @@ if __name__ == "__main__":
 			['key', name_var.get()],
 			['mouse', variable.get()],
 			['sense', sensitiveKey],
-			['mode', v.get()]]
+			['mode', v.get()],
+			['activation', aType.get()]]
 	
 	with open('user_settings.csv', 'w') as csvfile:
 		csvwriter = csv.writer(csvfile)

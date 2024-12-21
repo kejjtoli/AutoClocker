@@ -1,7 +1,8 @@
 type,val
-delay,500
-duration,20
-key,w
+delay,1000
+duration,10
+key,q
 mouse,Left
 sense,\
 mode,1
+activation,1
