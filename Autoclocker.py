@@ -40,12 +40,11 @@ def mainThread(chars, delay, type, dur):
 
 		if chars == "Left":
 			btn = Button.left
-			time.sleep(.5)
 		elif chars == "Right":
 			btn = Button.right
 		elif chars == "Middle":
 			btn = Button.middle
-
+		
 		while loopOn:
 			sleepInterrupted(delay)
 			if loopOn:
