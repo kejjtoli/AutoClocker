@@ -145,11 +145,7 @@ if __name__ == "__main__":
 		global isSettingKeyNow
 
 		try:
-			if isSettingKeyNow:
-				sensitiveKey = key.char
-				keyField.set(sensitiveKey)
-				isSettingKeyNow = False
-			else:
+			if not isSettingKeyNow:
 				if key.char == sensitiveKey:
 					if aType.get() == 1:
 						StartLoop()
@@ -172,6 +168,10 @@ if __name__ == "__main__":
 			if not isSettingKeyNow:
 				if key.char == sensitiveKey and aType.get() == 2:
 					StartLoop()
+			else:
+				sensitiveKey = key.char
+				keyField.set(sensitiveKey)
+				isSettingKeyNow = False
 			
 			return True
 		except AttributeError as ex:
