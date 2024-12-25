@@ -2,6 +2,7 @@ from pynput.keyboard import Key, Listener, Controller
 from pynput.mouse import Button, Controller as MouseCont
 import time
 import tkinter as tk
+from tkinter import ttk, font
 from threading import *
 import csv
 import datetime
@@ -27,14 +28,13 @@ def sleepInterrupted(duration):
 def mainThread(chars, delay, type, dur):
 	if type == "keyboard":
 		while loopOn:
-			#time.sleep(delay / 1000) 
-			sleepInterrupted(delay)
 			for char in chars:
 				if loopOn:
 					keyboard.press(char)
-					#time.sleep(dur / 1000)
 					sleepInterrupted(dur)
 				keyboard.release(char)
+			
+			sleepInterrupted(delay)
 	else:
 		btn = Button.left
 
@@ -46,23 +46,31 @@ def mainThread(chars, delay, type, dur):
 			btn = Button.middle
 		
 		while loopOn:
-			sleepInterrupted(delay)
 			if loopOn:
 				mouse.press(btn)
 				sleepInterrupted(dur)
 			mouse.release(btn)
+
+			sleepInterrupted(delay)
 
 
 if __name__ == "__main__":
 	currentThread = Thread(target = mainThread, args = ("a", 1))
 
 	root=tk.Tk()
+	s = ttk.Style()
+
+	smallFont = ('Helvetica',10,'normal')
+	defaultFont = ('Helvetica',12, 'normal')
+	boldFont = ('Helvetica',12, 'bold')
+
+	s.configure("def.TButton", font=smallFont)
 	
 	# setting the windows size
-	root.geometry("300x296")
+	root.geometry("300x300")
 
-	name_var=tk.StringVar()
-	passw_var=tk.StringVar()
+	name_var = tk.StringVar()
+	passw_var = tk.StringVar()
 	dur_var = tk.StringVar()
 	keyField = tk.StringVar()
 	variable = tk.StringVar(root)
@@ -185,49 +193,47 @@ if __name__ == "__main__":
 
 	root.title("Autoclocker")
 
-	smallFont = ('calibre',10,'normal')
-	defaultFont = ('calibre',12, 'normal')
-	boldFont = ('calibre',13, 'bold')
-
 	# Input type frame
-	input_frame = tk.LabelFrame(root, text="Input", font=boldFont, padx=10, pady=10)
+	input_label = ttk.Label(root, text = 'Input', font=boldFont)
+	input_frame = ttk.LabelFrame(root, padding=(10, 8), labelwidget=input_label)
 
-	name_label = tk.Label(input_frame, text = 'Keys', font=defaultFont)
-	name_entry = tk.Entry(input_frame,textvariable = name_var, font=smallFont, width=18)
+	name_label = ttk.Label(input_frame, text = 'Keys', font=defaultFont)
+	name_entry = ttk.Entry(input_frame,textvariable = name_var, font=smallFont, width=18)
 
-	mouse_label = tk.Label(input_frame, text = 'Mouse', font=defaultFont)
+	mouse_label = ttk.Label(input_frame, text = 'Mouse', font=defaultFont, padding=(0, 5))
 
-	b1= tk.Radiobutton(input_frame, text='', variable=v, value=1)
-	b2 = tk.Radiobutton(input_frame, text='', variable=v, value=2)
+	b1= ttk.Radiobutton(input_frame, text='', variable=v, value=1)
+	b2 = ttk.Radiobutton(input_frame, text='', variable=v, value=2)
 
 	options= ["Left", "Right", "Middle"]
-	w = tk.OptionMenu(input_frame, variable, *options)
-	w.config(width=15)
+	w = ttk.OptionMenu(input_frame, variable, None, *options)
 	
 	# Delay settings frame
-	delay_frame = tk.LabelFrame(root, text="Delay", font=boldFont, padx=1, pady=10)
+	delay_label = ttk.Label(root, text = 'Delay', font=boldFont)
+	delay_frame = ttk.LabelFrame(root, padding=(1, 8), labelwidget=delay_label)
 
-	passw_label = tk.Label(delay_frame, text = 'Delay', font = defaultFont)
-	passw1_label = tk.Label(delay_frame, text = 'ms', font = smallFont)
-	passw_entry=tk.Entry(delay_frame, textvariable = passw_var, font = smallFont, width=18)
+	passw_label = ttk.Label(delay_frame, text = 'Delay', font = defaultFont)
+	passw1_label = ttk.Label(delay_frame, text = 'ms', font = smallFont)
+	passw_entry=ttk.Entry(delay_frame, textvariable = passw_var, font = smallFont, width=18)
 
-	d_label = tk.Label(delay_frame, text = 'Duration', font = defaultFont)
-	d1_label = tk.Label(delay_frame, text = 'ms', font = smallFont)
-	d_entry=tk.Entry(delay_frame, textvariable = dur_var, font = smallFont, width=18)
+	d_label = ttk.Label(delay_frame, text = 'Duration', font = defaultFont, padding=(0, 5))
+	d1_label = ttk.Label(delay_frame, text = 'ms', font = smallFont)
+	d_entry=ttk.Entry(delay_frame, textvariable = dur_var, font = smallFont, width=18)
 
 	# Activation settings frame
-	activation_frame = tk.LabelFrame(root, text="Activation", font=boldFont, padx=5, pady=10)
+	activation_label = ttk.Label(root, text = 'Activation', font = boldFont)
+	activation_frame = ttk.LabelFrame(root, padding=(5, 8), labelwidget=activation_label)
 
-	s_label = tk.Label(activation_frame, text = 'Trigger', font = defaultFont)
-	s_btn=tk.Button(activation_frame,text = 'Set', command = ReadKey, width=5)
-	srem_btn=tk.Button(activation_frame,text = 'Delete', command = RemoveKey, width=6)
-	s_entry=tk.Entry(activation_frame, textvariable = keyField, font = smallFont, width=8)
+	s_label = ttk.Label(activation_frame, text = 'Trigger', font = defaultFont)
+	s_btn=ttk.Button(activation_frame,text = 'Set', command = ReadKey, width=5, style="def.TButton")
+	srem_btn=ttk.Button(activation_frame,text = 'Delete', command = RemoveKey, width=6, style="def.TButton")
+	s_entry=ttk.Entry(activation_frame, textvariable = keyField, font = smallFont, width=8)
 	s_entry.configure(state='readonly')
 	
-	sub_btn=tk.Button(activation_frame,text = 'Start', command = StartLoop, width=8)
+	sub_btn=ttk.Button(activation_frame,text = 'Start', command = StartLoop, width=8, style="def.TButton")
 
-	radioHold = tk.Radiobutton(activation_frame, text='Hold', variable=aType, value=2, font=smallFont)
-	radioPress = tk.Radiobutton(activation_frame, text='Press', variable=aType, value=1, font=smallFont)
+	radioHold = ttk.Radiobutton(activation_frame, text='Hold', variable=aType, value=2)
+	radioPress = ttk.Radiobutton(activation_frame, text='Press', variable=aType, value=1)
 	
 
 	# Packing input frame
@@ -240,7 +246,7 @@ if __name__ == "__main__":
 	name_entry.grid(row=1,column=1, padx=(10,5))
 	mouse_label.grid(row=2, column=0, padx=(10,5))
 
-	w.grid(row=2, column=1, padx=(10,5))
+	w.grid(row=2, column=1, padx=(10,5), sticky="ew")
 
 	# Packing delay frame
 	delay_frame.pack(padx=5, pady=0, fill="x")
